@@ -703,13 +703,13 @@ class ChoroplethUtilities(object):
   <text x="{x}" y="{y}" id="text-{text_id}" style="{style_str}" inkscape:label="{label}" dominant-baseline="text-after-edge" text-anchor="middle">{tspan_str}</text>'''
             if str(row_series.dy) == 'nan': text_str += f'''
   <script type="application/ecmascript" id="script-{text_id}">
-		
-		// Get path size
-		var groupNode = document.getElementById(&quot;{centroid_id}&quot;);
-		var pathBB = groupNode.getBBox();
-		
-		// Scale the font size and line height of the text
-		scaleTextNode(pathBB, &quot;text-{text_id}&quot;);
+        
+        // Get path size
+        var groupNode = document.getElementById(&quot;{centroid_id}&quot;);
+        var pathBB = groupNode.getBBox();
+        
+        // Scale the font size and line height of the text
+        scaleTextNode(pathBB, &quot;text-{text_id}&quot;);
         
   </script>'''
             with open(text_file_path, 'a') as f:
