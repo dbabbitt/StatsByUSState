@@ -54,18 +54,14 @@ class NotebookUtilities(object):
         self.github_folder = osp.dirname(osp.abspath(osp.curdir))
         
         # Create the data folder if it doesn't exist
-        if data_folder_path is None:
-            self.data_folder = '../data'
-        else:
-            self.data_folder = data_folder_path
+        if data_folder_path is None: self.data_folder = '../data'
+        else: self.data_folder = data_folder_path
         makedirs(self.data_folder, exist_ok=True)
         if verbose: print('data_folder: {}'.format(osp.abspath(self.data_folder)), flush=True)
         
         # Create the saves folder if it doesn't exist
-        if saves_folder_path is None:
-            self.saves_folder = '../saves'
-        else:
-            self.saves_folder = saves_folder_path
+        if saves_folder_path is None: self.saves_folder = '../saves'
+        else: self.saves_folder = saves_folder_path
         makedirs(self.saves_folder, exist_ok=True)
         if verbose: print('saves_folder: {}'.format(osp.abspath(self.saves_folder)), flush=True)
         
@@ -89,15 +85,17 @@ class NotebookUtilities(object):
         # Ensure the Scripts folder is in PATH
         self.anaconda_folder = osp.dirname(sys.executable)
         self.scripts_folder = osp.join(self.anaconda_folder, 'Scripts')
-        if self.scripts_folder not in sys.path:
-            sys.path.insert(1, self.scripts_folder)
+        if self.scripts_folder not in sys.path: sys.path.insert(1, self.scripts_folder)
 
         # Handy list of the different types of encodings
         self.encoding_types_list = ['utf-8', 'latin1', 'iso8859-1']
         self.encoding_type = self.encoding_types_list[0]
         self.encoding_errors_list = ['ignore', 'replace', 'xmlcharrefreplace']
         self.encoding_error = self.encoding_errors_list[2]
-        self.decoding_types_list = ['ascii', 'cp037', 'cp437', 'cp863', 'utf_32', 'utf_32_be', 'utf_32_le', 'utf_16', 'utf_16_be', 'utf_16_le', 'utf_7', 'utf_8', 'utf_8_sig', 'latin1', 'iso8859-1']
+        self.decoding_types_list = [
+            'ascii', 'cp037', 'cp437', 'cp863', 'utf_32', 'utf_32_be', 'utf_32_le', 'utf_16',
+            'utf_16_be', 'utf_16_le', 'utf_7', 'utf_8', 'utf_8_sig', 'latin1', 'iso8859-1'
+        ]
         self.decoding_type = self.decoding_types_list[11]
         self.decoding_errors_list = self.encoding_errors_list.copy()
         self.decoding_error = self.decoding_errors_list[2]
@@ -105,7 +103,8 @@ class NotebookUtilities(object):
         # Determine URL from file path
         self.url_regex = re.compile(r'\b(https?|file)://[-A-Z0-9+&@#/%?=~_|$!:,.;]*[A-Z0-9+&@#/%=~_|$]', re.IGNORECASE)
         self.filepath_regex = re.compile(
-            r'\b[c-d]:\\(?:[^\\/:*?"<>|\x00-\x1F]{0,254}[^.\\/:*?"<>|\x00-\x1F]\\)*(?:[^\\/:*?"<>|\x00-\x1F]{0,254}[^.\\/:*?"<>|\x00-\x1F])', re.IGNORECASE
+            r'\b[c-d]:\\(?:[^\\/:*?"<>|\x00-\x1F]{0,254}[^.\\/:*?"<>|\x00-\x1F]\\)*(?:[^\\/:*?"<>|\x00-\x1F]{0,254}[^.\\/:*?"<>|\x00-\x1F])',
+            re.IGNORECASE
         )
         
         # Various aspect ratios
@@ -151,7 +150,7 @@ class NotebookUtilities(object):
         """
         
         # Split the input string using various separators
-        stripped_list = re.split(r'( |/|–|\\u2009|-|\[)', str(x), 0)
+        stripped_list = re.split(r'( |/|–|\u2009|-|\[)', str(x), 0)
         
         # Remove non-numeric characters from each element in the stripped list
         stripped_list = [re.sub(r'\D+', '', x) for x in stripped_list]
@@ -659,7 +658,8 @@ class NotebookUtilities(object):
         return turbulence
     
     
-    def replace_consecutive_elements(self, actions_list, element):
+    @staticmethod
+    def replace_consecutive_elements(actions_list, element):
         """
         Replaces consecutive elements in a list with a count of how many there are in a row.
         
@@ -2079,7 +2079,7 @@ class NotebookUtilities(object):
         # Apply a formatting function to convert milliseconds to a formatted timedelta for all elements in the DataFrame
         df = df.applymap(lambda x: self.format_timedelta(timedelta(milliseconds=int(x))), na_action='ignore').T
 
-        # Format the standard deviation (SD) column to include the '±' symbol
+        # Format the standard deviation (SD) column to include the plus-minus symbol
         df.SD = df.SD.map(lambda x: '±' + str(x))
         
         # Display the resulting DataFrame
