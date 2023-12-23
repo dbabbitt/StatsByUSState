@@ -266,18 +266,22 @@ class StatsScrapingUtilities(object):
             'Yemen (\xa0North Yemen and South Yemen → Yemen)': 'Yemen',
             'Yemen, Rep.': 'Yemen',
         }
-        self.oecd_countries_list = ['Austria', 'Australia', 'Belgium', 'Canada', 'Chile',
-                                    'Colombia', 'Costa Rica', 'Czechia', 'Denmark',
-                                    'Estonia', 'Finland', 'France', 'Germany', 'Greece',
-                                    'Hungary', 'Iceland', 'Ireland', 'Israel', 'Italy',
-                                    'Japan', 'Korea', 'Latvia', 'Lithuania', 'Luxembourg',
-                                    'Mexico', 'Netherlands', 'New Zealand', 'Norway',
-                                    'Poland', 'Portugal', 'Slovakia', 'Slovenia', 'Spain',
-                                    'Sweden', 'Switzerland', 'Turkiye', 'UK', 'USA']
+        self.oecd_countries_list = [
+            'Austria', 'Australia', 'Belgium', 'Canada', 'Chile',
+            'Colombia', 'Costa Rica', 'Czechia', 'Denmark',
+            'Estonia', 'Finland', 'France', 'Germany', 'Greece',
+            'Hungary', 'Iceland', 'Ireland', 'Israel', 'Italy',
+            'Japan', 'Korea', 'Latvia', 'Lithuania', 'Luxembourg',
+            'Mexico', 'Netherlands', 'New Zealand', 'Norway',
+            'Poland', 'Portugal', 'Slovakia', 'Slovenia', 'Spain',
+            'Sweden', 'Switzerland', 'Turkiye', 'UK', 'USA'
+        ]
         
         # These countries cause redditors to make hurtful comments *sniff*
-        self.derisable_countries_list = ['Channel Islands', 'Falkland Islands', 'Guernsey',
-                                         'Hong Kong', 'Jersey', 'Macau', 'Puerto Rico']
+        self.derisable_countries_list = [
+            'Channel Islands', 'Falkland Islands', 'Guernsey',
+            'Hong Kong', 'Jersey', 'Macau', 'Puerto Rico'
+        ]
 
         # ISO 3166-1 alpha-3 dictionaries
         self.alpha3_to_country_dict = {
@@ -786,39 +790,38 @@ class StatsScrapingUtilities(object):
         
         # US States information
         if nu.pickle_exists('us_stats_df'): self.us_stats_df = nu.load_object('us_stats_df')
-        if nu.pickle_exists('column_description_dict'): self.column_description_dict = nu.load_object('column_description_dict')
-        self.us_states_abbreviation_dict = {'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR',
-                                            'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT',
-                                            'Delaware': 'DE', 'District of Columbia': 'DC', 'Florida': 'FL',
-                                            'Georgia': 'GA', 'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL',
-                                            'Indiana': 'IN', 'Iowa': 'IA', 'Kansas': 'KS', 'Kentucky': 'KY',
-                                            'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD',
-                                            'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN',
-                                            'Mississippi': 'MS', 'Missouri': 'MO', 'Montana': 'MT',
-                                            'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH',
-                                            'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY',
-                                            'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH',
-                                            'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA',
-                                            'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD',
-                                            'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT',
-                                            'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV',
-                                            'Wisconsin': 'WI', 'Wyoming': 'WY', 'American Samoa': 'AS',
-                                            'Guam': 'GU', 'Northern Mariana Islands': 'MP',
-                                            'Puerto Rico': 'PR', 'Virgin Islands': 'VI'
-                                           }
+        if nu.pickle_exists('column_description_dict'):
+            self.column_description_dict = nu.load_object('column_description_dict')
+        self.us_states_abbreviation_dict = {
+            'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR',
+            'California': 'CA', 'Colorado': 'CO', 'Connecticut': 'CT',
+            'Delaware': 'DE', 'District of Columbia': 'DC', 'Florida': 'FL',
+            'Georgia': 'GA', 'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL',
+            'Indiana': 'IN', 'Iowa': 'IA', 'Kansas': 'KS', 'Kentucky': 'KY',
+            'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD',
+            'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN',
+            'Mississippi': 'MS', 'Missouri': 'MO', 'Montana': 'MT',
+            'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH',
+            'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY',
+            'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH',
+            'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA',
+            'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD',
+            'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT',
+            'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV',
+            'Wisconsin': 'WI', 'Wyoming': 'WY', 'American Samoa': 'AS',
+            'Guam': 'GU', 'Northern Mariana Islands': 'MP',
+            'Puerto Rico': 'PR', 'Virgin Islands': 'VI'
+        }
     
     
     
     
     def get_driver(self, browser_name='FireFox', verbose=True):
-        if verbose:
-            print('Getting the {} driver'.format(browser_name))
+        if verbose: print('Getting the {} driver'.format(browser_name))
         log_dir = '../log'
         os.makedirs(name=log_dir, exist_ok=True)
-        if browser_name == 'FireFox':
-            executable_name = 'geckodriver'
-        elif browser_name == 'Chrome':
-            executable_name = 'chromedriver80'
+        if browser_name == 'FireFox': executable_name = 'geckodriver'
+        elif browser_name == 'Chrome': executable_name = 'chromedriver80'
         executable_path = '../../web-scrapers/exe/{}.exe'.format(executable_name)
         service_log_path = os.path.join(log_dir, '{}.log'.format(executable_name))
         from selenium import webdriver
@@ -861,42 +864,39 @@ class StatsScrapingUtilities(object):
     
     
     def wait_for(self, wait_count, verbose=True):
-        if verbose:
-            print('Waiting for {} seconds'.format(wait_count))
+        if verbose: print('Waiting for {} seconds'.format(wait_count))
         import time
         time.sleep(wait_count)
     
     
     
     def driver_get_url(self, driver, url_str, verbose=True):
-        if verbose:
-            print('Getting URL: {}'.format(url_str))
+        if verbose: print('Getting URL: {}'.format(url_str))
         finished = 0
         fails = 0
         while (finished == 0) and (fails < 8):
+            
+            # Message: Timeout loading page after 100000ms
             try:
-                
-                # Message: Timeout loading page after 100000ms
                 driver.set_page_load_timeout(300)
-                
                 driver.get(url_str)
                 finished = 1
+            
+            # Wait for 10 seconds
             except Exception as e:
                 message = str(e).strip()
-                if verbose:
-                    print(message)
+                if verbose: print(message)
                 fails += 1
-                
-                # Wait for 10 seconds
                 self.wait_for(10, verbose=verbose)
     
     
     
-    def get_country_state_equivalents(self,
-                                      countries_df, country_name_column, country_value_column,
-                                      states_df, state_name_column, state_value_column,
-                                      cn_col_explanation=None, st_col_explanation=None,
-                                      countries_set=None, states_set=None, verbose=False):
+    def get_country_state_equivalents(
+        self, countries_df, country_name_column, country_value_column,
+        states_df, state_name_column, state_value_column,
+        cn_col_explanation=None, st_col_explanation=None,
+        countries_set=None, states_set=None, verbose=False
+    ):
         if countries_set is None:
             countries_set = set([cn for cn in countries_df[country_name_column] if str(cn) != 'nan'])
         
@@ -906,23 +906,25 @@ class StatsScrapingUtilities(object):
         
         mask_series = countries_df[country_name_column].isin(countries_set)
         assert countries_df[country_value_column].dtype == np.dtype('int64'), "You have the make the country values integers"
-        country_tuples_list = [(r[country_name_column], r[country_value_column]) for i, r in countries_df[mask_series].iterrows()]
+        country_tuples_list = [
+            (r[country_name_column], r[country_value_column]) for i, r in countries_df[mask_series].iterrows()
+        ]
         
-        if states_set is None:
-            states_set = set([sn for sn in states_df[state_name_column] if str(sn) != 'nan'])
+        if states_set is None: states_set = set([sn for sn in states_df[state_name_column] if str(sn) != 'nan'])
         
         # Check for duplicate state names
         mask_series = states_df.duplicated(subset=[state_name_column], keep=False)
         assert states_df[mask_series].shape[0] == 0, "You've duplicated some state names"
         
         mask_series = states_df[state_name_column].isin(states_set)
-        state_tuples_list = [(r[state_name_column], r[state_value_column]) for i, r in states_df[mask_series].iterrows()]
+        state_tuples_list = [
+            (r[state_name_column], r[state_value_column]) for i, r in states_df[mask_series].iterrows()
+        ]
         
         # Get country-to-state equivalence dictionary
         rows_list = []
         if verbose:
-            if cn_col_explanation is None:
-                cn_col_explanation = country_value_column.replace('_', ' ')
+            if cn_col_explanation is None: cn_col_explanation = country_value_column.replace('_', ' ')
             print()
             explanations_list = []
             # print(state_tuples_list)
@@ -932,15 +934,17 @@ class StatsScrapingUtilities(object):
             state_name = candidate_tuple[0]
             country_name = country_tuple[0]
             if verbose:
-                explanations_list.append(f'{country_name} ({country_tuple[1]:.2f}) is close to the {cn_col_explanation} of {state_name} ({candidate_tuple[1]:.2f})')
+                explanations_list.append(
+                    f'{country_name} ({country_tuple[1]:.2f}) is close to the {cn_col_explanation} of'
+                    f' {state_name} ({candidate_tuple[1]:.2f})'
+                )
             row_dict = {}
             row_dict['country_name'] = country_name
             row_dict['state_name'] = state_name
             rows_list.append(row_dict)
         c2s_equivalent_dict = pd.DataFrame(rows_list).set_index('country_name').state_name.to_dict()
         if verbose:
-            for explanation in sorted(explanations_list):
-                print(explanation.replace('.00)', ')'))
+            for explanation in sorted(explanations_list): print(explanation.replace('.00)', ')'))
 
         
         # Get the state-to-country equivalence dictionary
