@@ -953,24 +953,24 @@ class StatsScrapingUtilities(object):
         # Get the state-to-country equivalence dictionary
         rows_list = []
         if verbose:
-            if st_col_explanation is None:
-                st_col_explanation = state_value_column.replace('_', ' ')
+            if st_col_explanation is None: st_col_explanation = state_value_column.replace('_', ' ')
             print()
             explanations_list = []
         for state_tuple in state_tuples_list:
             candidate_tuple = sorted([s for s in country_tuples_list], key=lambda x: abs(x[1] - state_tuple[1]))[0]
             country_name = candidate_tuple[0]
             state_name = state_tuple[0]
-            if verbose:
-                explanations_list.append(f'{state_name} ({state_tuple[1]:,.2f}) is close to the {st_col_explanation} of {country_name} ({candidate_tuple[1]:,.2f})')
+            if verbose: explanations_list.append(
+                f'{state_name} ({state_tuple[1]:,.2f}) is close to the {st_col_explanation}'
+                f' of {country_name} ({candidate_tuple[1]:,.2f})'
+            )
             row_dict = {}
             row_dict['state_name'] = state_name
             row_dict['country_name'] = country_name
             rows_list.append(row_dict)
         s2c_equivalent_dict = pd.DataFrame(rows_list).set_index('state_name').country_name.to_dict()
         if verbose:
-            for explanation in sorted(explanations_list):
-                print(explanation.replace('.00)', ')'))
+            for explanation in sorted(explanations_list): print(explanation.replace('.00)', ')'))
         
         return s2c_equivalent_dict, c2s_equivalent_dict
     
