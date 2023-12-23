@@ -816,7 +816,8 @@ class StatsScrapingUtilities(object):
     
     
     
-    def get_driver(self, browser_name='FireFox', verbose=True):
+    @staticmethod
+    def get_driver(browser_name='FireFox', verbose=True):
         if verbose: print('Getting the {} driver'.format(browser_name))
         log_dir = '../log'
         os.makedirs(name=log_dir, exist_ok=True)
@@ -863,7 +864,8 @@ class StatsScrapingUtilities(object):
     
     
     
-    def wait_for(self, wait_count, verbose=True):
+    @staticmethod
+    def wait_for(wait_count, verbose=True):
         if verbose: print('Waiting for {} seconds'.format(wait_count))
         import time
         time.sleep(wait_count)
@@ -891,8 +893,9 @@ class StatsScrapingUtilities(object):
     
     
     
+    @staticmethod
     def get_country_state_equivalents(
-        self, countries_df, country_name_column, country_value_column,
+        countries_df, country_name_column, country_value_column,
         states_df, state_name_column, state_value_column,
         cn_col_explanation=None, st_col_explanation=None,
         countries_set=None, states_set=None, verbose=False
@@ -973,7 +976,8 @@ class StatsScrapingUtilities(object):
     
     
     
-    def get_similarity_measure(self, a, b):
+    @staticmethod
+    def get_similarity_measure(a, b):
         from difflib import SequenceMatcher
         
         return SequenceMatcher(None, str(a), str(b)).ratio()
@@ -1003,7 +1007,8 @@ class StatsScrapingUtilities(object):
     
     
     
-    def get_max_rsquared_adj(self, df, columns_list, verbose=False):
+    @staticmethod
+    def get_max_rsquared_adj(df, columns_list, verbose=False):
         if verbose:
             t0 = time.time()
         rows_list = []
