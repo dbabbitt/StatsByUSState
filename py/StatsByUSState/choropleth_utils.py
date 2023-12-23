@@ -8,8 +8,10 @@
 
 
 from . import nu
+from html import escape
 from math import sqrt
 from matplotlib import cm
+from os import path as osp
 from shutil import copyfile
 from sklearn.feature_extraction.text import TfidfVectorizer
 from xml.etree.ElementTree import Element
@@ -96,7 +98,7 @@ class ChoroplethUtilities(object):
                                                           'vector-effect': 'none', 'fill-opacity': '1', 'stroke-miterlimit': '4',
                                                           'stroke-dasharray': 'none', 'stroke-dashoffset': '0'})
         self.l_str = '<path style="{}" d="{{}}" id="path-{{}}" inkscape:connector-curvature="0" inkscape:label="{{}}" />'.format(';'.join(self.label_line_style_list))
-        self.label_line_file_path = os.path.join(
+        self.label_line_file_path = osp.join(
             nu.saves_folder, 'xml', '{}_districts_label_line.xml'.format(self.iso_3166_2_code)
         )
         self.svg_suffix = '\n</svg>'
@@ -106,7 +108,7 @@ class ChoroplethUtilities(object):
             self.copy_file_name = 'us - Copy.svg'
         elif self.iso_3166_2_code == 'af':
             self.copy_file_name = 'Afghanistan - Copy.svg'
-        self.copy_file_path = os.path.join(nu.data_folder, 'svg', self.copy_file_name)
+        self.copy_file_path = osp.join(nu.data_folder, 'svg', self.copy_file_name)
         if ('svg_width' not in self.all_countries_df.columns) or ('svg_height' not in self.all_countries_df.columns):
             raise Exception('svg_width and svg_height must be in your all_countries_df')
         self.svg_width = self.settings_dict['svg_width']
@@ -179,7 +181,7 @@ class ChoroplethUtilities(object):
         self.fill_style_prefix = 'stroke-width:1.0;fill:{};'
         self.fill_style_str = self.fill_style_prefix.format(self.get_fill_color(self.html_style_str))
         self.district_path_str = '<path id="{}" d="{}" data-id="{}" data-name="{}" style="{}" inkscape:connector-curvature="0" />'
-        self.svg_dir = os.path.abspath(os.path.join(nu.saves_folder, 'svg'))
+        self.svg_dir = osp.abspath(osp.join(nu.saves_folder, 'svg'))
         os.makedirs(name=self.svg_dir, exist_ok=True)
         
         # Unused XML bits for making your own colorbar
@@ -227,7 +229,7 @@ class ChoroplethUtilities(object):
        style="stroke-linecap:butt;stroke-linejoin:round"
        inkscape:label="Colorbar">{}{}
     </g>'''
-        self.gradient_file_path = os.path.join(nu.data_folder, 'txt', 'gradient.txt')
+        self.gradient_file_path = osp.join(nu.data_folder, 'txt', 'gradient.txt')
         with open(self.gradient_file_path, 'r') as f:
             self.gradient_str = f.read()
         self.matplotlib_axis_str = '''
@@ -440,7 +442,7 @@ class ChoroplethUtilities(object):
 
         # Build and save legend for further manipulation
         legend_obj = pylab.legend(artists_list, labels_list, loc='upper left')
-        file_path = os.path.join(self.svg_dir, 'legend.svg')
+        file_path = osp.join(self.svg_dir, 'legend.svg')
         plt.savefig(file_path)
         plt.close(fig)
 
@@ -533,7 +535,7 @@ class ChoroplethUtilities(object):
     
     def get_colorbar_xml(self, column_name, cmap='viridis', min=None, max=None):
         cb1 = self.show_colorbar(column_name, cmap=cmap, min=min, max=max)
-        file_path = os.path.join(self.svg_dir, 'colorbar.svg')
+        file_path = osp.join(self.svg_dir, 'colorbar.svg')
         
         # Trim the colorbar xml
         self.trim_d_path(file_path)
@@ -633,9 +635,9 @@ class ChoroplethUtilities(object):
         return attributes_set
 
     def possibly_raise_exceptions(self, one_country_df):
-        if not os.path.exists(self.copy_file_path):
+        if not osp.exists(self.copy_file_path):
             raise Exception('{} does not exist'.format(self.copy_file_path))
-        if not os.path.exists(self.label_line_file_path):
+        if not osp.exists(self.label_line_file_path):
             raise Exception('{} does not exist'.format(self.label_line_file_path))
         if 'district_abbreviation' not in one_country_df.columns:
             raise Exception('one_country_df needs to have the district_abbreviation column')
@@ -652,7 +654,7 @@ class ChoroplethUtilities(object):
                 file_name = 'index_districts_text.xml'
             else:
                 file_name = '{}_districts_text.xml'.format(string_column_name)
-            text_file_path = os.path.join(nu.saves_folder, 'xml', file_name)
+            text_file_path = osp.join(nu.saves_folder, 'xml', file_name)
         
         # Wipe out any preruns
         with open(text_file_path, 'w') as f:
@@ -661,7 +663,6 @@ class ChoroplethUtilities(object):
         mask_series = one_country_df['centroid_id'].isnull()
         if string_column_name is not None:
             mask_series = mask_series | one_country_df[string_column_name].isnull()
-        from html import escape
         for district_name, row_series in one_country_df[~mask_series].sort_index(axis='index', ascending=False).iterrows():
             text_id = self.indexize_string(district_name)
             centroid_id = row_series.centroid_id
@@ -734,8 +735,8 @@ class ChoroplethUtilities(object):
         return text_file_path
 
     def create_svg_file_beginning(self, svg_file_name):
-        svg_file_path = os.path.join(nu.saves_folder, 'svg', svg_file_name)
-        if not os.path.exists(svg_file_path):
+        svg_file_path = osp.join(nu.saves_folder, 'svg', svg_file_name)
+        if not osp.exists(svg_file_path):
             copyfile(self.copy_file_path, svg_file_path)
         with open(svg_file_path, 'w') as f:
             attributes_set = self.add_docname(set(self.svg_attributes_list), svg_file_name)
@@ -900,6 +901,38 @@ class ChoroplethUtilities(object):
     
     
     
+    def edit_and_display_svg(self, numeric_column_name, string_column_name=None, verbose=False):
+        text_editor_path = r'C:\Program Files\Notepad++\notepad++.exe'
+        if string_column_name is None:
+            svg_file_path = osp.abspath(self.create_country_colored_map(
+                numeric_column_name,
+                one_country_df=self.one_country_df,
+                cmap='viridis',
+                min=None,
+                max=None,
+            ))
+        else:
+            svg_file_path = osp.abspath(self.create_country_colored_labeled_map(
+                numeric_column_name,
+                string_column_name=string_column_name,
+                one_country_df=self.one_country_df,
+                cmap='viridis',
+            ))
+        if verbose: print(f'Opening {svg_file_path} in Notepad++')
+        import subprocess
+        Popen_obj = subprocess.Popen([text_editor_path, svg_file_path], creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+        inkscape_path = r'C:\Program Files\Inkscape\bin\inkscape.exe'
+        png_file_path = svg_file_path.replace('svg', 'png')
+        os.makedirs(osp.dirname(png_file_path), exist_ok=True)
+        if verbose: print(f'Creating {png_file_path}')
+        return_value = subprocess.call([inkscape_path, svg_file_path, f'--export-filename={png_file_path}'])
+        common_prefix = osp.commonprefix([png_file_path, os.getcwd()])
+        relative_path = osp.join(*png_file_path.split(common_prefix)[1:])
+        from IPython.display import HTML
+        display(HTML('<img src="../' + relative_path.replace(os.sep, '/') + '" style="width:50%"/>'))
+    
+    
+    
     def create_country_labeled_map(self, string_column_name=None, one_country_df=None, cmap='viridis', colors_dict=None, colors_keyed_to_district_abbreviation=False):
         """
         one_country_df must have district names as an index, the district_abbreviation, outline_d, text_x and
@@ -986,23 +1019,22 @@ class ChoroplethUtilities(object):
         districts_file_path = c.create_us_google_suggest_labeled_map(cu_str='common')
         districts_file_path = c.create_us_google_suggest_labeled_map(cu_str='first')
         """
-        if os.path.exists(self.copy_file_path) and os.path.exists(self.label_line_file_path):
-            districts_file_path = os.path.join(
+        if osp.exists(self.copy_file_path) and osp.exists(self.label_line_file_path):
+            districts_file_path = osp.join(
                 nu.saves_folder, 'svg', '{}_{}.svg'.format(self.iso_3166_2_code.upper(), cu_str.upper())
             )
-            if os.path.exists(districts_file_path):
+            if osp.exists(districts_file_path):
                 os.remove(districts_file_path)
             copyfile(self.copy_file_path, districts_file_path)
             with open(districts_file_path, 'r') as f:
                 xml_str = f.read()
             if self.svg_regex.search(xml_str):
-                text_file_path = os.path.join(nu.saves_folder, 'xml', '{}_districts_text.xml'.format(cu_str))
+                text_file_path = os.path.join(self.s.saves_folder, 'xml', '{}_districts_text.xml'.format(cu_str))
                 with open(text_file_path, 'w') as f:
                     print('', file=f)
                 cap_str = cu_str[:1].upper()+cu_str[1:]
                 column_name = 'Google_Suggest_{}'.format(cap_str)
                 mask_series = self.one_country_df[column_name].isnull()
-                from html import escape
                 for district_name, row_series in self.one_country_df[~mask_series].sort_index(axis='index', ascending=False).iterrows():
                     text_id = self.indexize_string(district_name)
                     label = '{} Google {} Suggestion'.format(district_name, cap_str)
@@ -1221,7 +1253,7 @@ class ChoroplethUtilities(object):
         cb1 = mpl.colorbar.ColorbarBase(ax, cmap=cmap, norm=norm,
                                         orientation='vertical')
         cb1.set_label(self.get_column_description(column_name))
-        file_path = os.path.join(self.svg_dir, 'colorbar.svg')
+        file_path = osp.join(self.svg_dir, 'colorbar.svg')
         plt.savefig(file_path)
         plt.close(fig)
         

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg id="svg" version="1.0" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" inkscape:version="1.1.2 (b8e25be833, 2022-02-05)" sodipodi:docname="US_temperature_diff_celsius_district_abbreviation.svg" height="589.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1030.0 589.0" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:svg="http://www.w3.org/2000/svg" width="1030.0">
+<svg id="svg" width="1030.0" xmlns:svg="http://www.w3.org/2000/svg" sodipodi:docname="US_temperature_diff_celsius_district_abbreviation.svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" viewBox="0 0 1030.0 589.0" xmlns="http://www.w3.org/2000/svg" inkscape:version="1.1.2 (b8e25be833, 2022-02-05)" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" height="589.0" version="1.0">
   <sodipodi:namedview bordercolor="#666666" borderopacity="1.0" id="named-view" inkscape:current-layer="svg" inkscape:cx="519.35606" inkscape:cy="287.55662" inkscape:pagecheckerboard="0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:window-height="991" inkscape:window-maximized="1" inkscape:window-width="1920" inkscape:window-x="-9" inkscape:window-y="-9" inkscape:zoom="1.2776908" pagecolor="#ffffff" showgrid="false" />
   <defs id="defs-main">
         <style type="text/css" id="style-main">
@@ -741,16 +741,16 @@
    <ns0:g id="patch_2">
     <ns0:path d="M 36 384.48 L 64.8 384.48 L 64.8 51.84 L 36 51.84 z" style="fill: #ffffff" />
    </ns0:g>
-   <ns0:image ns1:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAACgAAAHOCAYAAADqlEtGAAADW0lEQVR4nO2dy3EkMQzFJDVDcwjOP5SdzWB8wKGhKiAC1vtQnLHL3j/797PEnLcH+ItZ2z2je7q11uyz357hK1lM0VvsV7AMQmaVQcas7VZw9nGL6J5uXWDxBQqWQUYZpOifutldMwy9xRco2JphpCBFfyxkMSUFKSlI6ViglEGK/gvMSkKpJJQUpKQgRb8Hs5gynxRkjH1E+Xi1mKNXUD+g3+IWNaRFTanFFL2CrRlKa4aiL4lfwVoMmeUWsJJg5iMfUT5eGeTMxy3gBQraM6h/SfwWd81A+kxCKYMU/R7sLabo32K/gmUQol8zFyho/62PSgKpJJQySOlYoOgz2Jqh6C32K9iagZRBSnuQov9ZXRZTWjOUnjpKGaTo92AWU/QW+xUsg5AySNFnMIsp/c4CpQxS9GvGr6A9g/oB/RZXEkgZpJRBij6DWUzRW5yCFL+CtRiiz+Co/w/XymJOClL8CraoIfoMZjFFb3EKUvwK1mKIPoP6Af0WVxJIGaSUQUoZpOgVrCQUvcV6BRuQUosp+hbrB/RbXEkgZZBSBin6DM7a7h/I+i2uJBB9SVKQ4lfQ3uIspqQgpWOBol8zegX1A7ZmKJWE0qKm1GKKXkH9gDdY3JpBlEFKxwJF3+JKQhn5H0u5QEF7SW5Q8O0RvpOClFmrkiD0FvsV3C1qRhmklEGKPoNd1JQuakprhlKLKfoM6l+SLKZcoODbE/zBBQqWQYZewd5iyhy5xX4F7SVJQcoNCr49wndaM5RKQpnTT5oY+jXjV9C+B1szFL3FfgXLIKQMUvTHQiWhVBJKClJSkKJXUP+SZDElBSkpSElBSouaorf4BgX/vT3DV25QsAwi9HswiymtGco8ZZChXzMXKFiLGfqXZJ5KwqgkFH1J/Ap2LEDmLHeLKwllHrnFfgXLIGSejgWG/lNdFlO6qCl9qqOUQYo+g1lM6aKmdFFTyiBFf7DqT/4spvgVtH8/6Few76gh+qeui5qit/gCBVszjJ46iv7cas1Q+kxC0ZfkAgXLIEP/1FUSSiWh9B01pXOLUosp+hZnMSUFKXP6+4OMMkgZ+4TzVBLGPPL//+FX0D6hfb41j/xv7foVPPIWt2Yoeov9CrZmIHPkM7qnWxe0eJ7tFtE93aoknP8GNI6eUVE/SQAAAABJRU5ErkJggg==" id="image73344550af" transform="scale(1 -1) translate(0 -332.64)" x="36" y="-51.84" width="28.8" height="332.64" />
+   <ns0:image ns1:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAACgAAAHOCAYAAADqlEtGAAADW0lEQVR4nO2dy3EkMQzFJDVDcwjOP5SdzWB8wKGhKiAC1vtQnLHL3j/797PEnLcH+ItZ2z2je7q11uyz357hK1lM0VvsV7AMQmaVQcas7VZw9nGL6J5uXWDxBQqWQUYZpOifutldMwy9xRco2JphpCBFfyxkMSUFKSlI6ViglEGK/gvMSkKpJJQUpKQgRb8Hs5gynxRkjH1E+Xi1mKNXUD+g3+IWNaRFTanFFL2CrRlKa4aiL4lfwVoMmeUWsJJg5iMfUT5eGeTMxy3gBQraM6h/SfwWd81A+kxCKYMU/R7sLabo32K/gmUQol8zFyho/62PSgKpJJQySOlYoOgz2Jqh6C32K9iagZRBSnuQov9ZXRZTWjOUnjpKGaTo92AWU/QW+xUsg5AySNFnMIsp/c4CpQxS9GvGr6A9g/oB/RZXEkgZpJRBij6DWUzRW5yCFL+CtRiiz+Co/w/XymJOClL8CraoIfoMZjFFb3EKUvwK1mKIPoP6Af0WVxJIGaSUQUoZpOgVrCQUvcV6BRuQUosp+hbrB/RbXEkgZZBSBin6DM7a7h/I+i2uJBB9SVKQ4lfQ3uIspqQgpWOBol8zegX1A7ZmKJWE0qKm1GKKXkH9gDdY3JpBlEFKxwJF3+JKQhn5H0u5QEF7SW5Q8O0RvpOClFmrkiD0FvsV3C1qRhmklEGKPoNd1JQuakprhlKLKfoM6l+SLKZcoODbE/zBBQqWQYZewd5iyhy5xX4F7SVJQcoNCr49wndaM5RKQpnTT5oY+jXjV9C+B1szFL3FfgXLIKQMUvTHQiWhVBJKClJSkKJXUP+SZDElBSkpSElBSouaorf4BgX/vT3DV25QsAwi9HswiymtGco8ZZChXzMXKFiLGfqXZJ5KwqgkFH1J/Ap2LEDmLHeLKwllHrnFfgXLIGSejgWG/lNdFlO6qCl9qqOUQYo+g1lM6aKmdFFTyiBFf7DqT/4spvgVtH8/6Few76gh+qeui5qit/gCBVszjJ46iv7cas1Q+kxC0ZfkAgXLIEP/1FUSSiWh9B01pXOLUosp+hZnMSUFKXP6+4OMMkgZ+4TzVBLGPPL//+FX0D6hfb41j/xv7foVPPIWt2Yoeov9CrZmIHPkM7qnWxe0eJ7tFtE93aoknP8GNI6eUVE/SQAAAABJRU5ErkJggg==" id="imageac828106ee" transform="scale(1 -1) translate(0 -332.64)" x="36" y="-51.84" width="28.8" height="332.64" />
    <ns0:g id="matplotlib.axis_1" />
    <ns0:g id="matplotlib.axis_2" style="fill:#000000;fill-opacity:1;">
     <ns0:g id="ytick_1">
      <ns0:g id="line2d_1">
       <ns0:defs>
-       <ns0:path id="m5762df3759" d="M 0 0 L 3.5 0 " style="stroke: #000000; stroke-width: 0.8" />
+       <ns0:path id="mcc1f496dc1" d="M 0 0 L 3.5 0 " style="stroke: #000000; stroke-width: 0.8" />
       </ns0:defs>
       <ns0:g>
-       <ns0:use ns1:href="#m5762df3759" x="64.8" y="361.499689" style="stroke: #000000; stroke-width: 0.8" />
+       <ns0:use ns1:href="#mcc1f496dc1" x="64.8" y="361.499689" style="stroke: #000000; stroke-width: 0.8" />
       </ns0:g>
      </ns0:g>
      <ns0:g id="text_1">
@@ -768,7 +768,7 @@
     <ns0:g id="ytick_2">
      <ns0:g id="line2d_2">
       <ns0:g>
-       <ns0:use ns1:href="#m5762df3759" x="64.8" y="304.048912" style="stroke: #000000; stroke-width: 0.8" />
+       <ns0:use ns1:href="#mcc1f496dc1" x="64.8" y="304.048912" style="stroke: #000000; stroke-width: 0.8" />
       </ns0:g>
      </ns0:g>
      <ns0:g id="text_2">
@@ -785,7 +785,7 @@
     <ns0:g id="ytick_3">
      <ns0:g id="line2d_3">
       <ns0:g>
-       <ns0:use ns1:href="#m5762df3759" x="64.8" y="246.598135" style="stroke: #000000; stroke-width: 0.8" />
+       <ns0:use ns1:href="#mcc1f496dc1" x="64.8" y="246.598135" style="stroke: #000000; stroke-width: 0.8" />
       </ns0:g>
      </ns0:g>
      <ns0:g id="text_3">
@@ -802,7 +802,7 @@
     <ns0:g id="ytick_4">
      <ns0:g id="line2d_4">
       <ns0:g>
-       <ns0:use ns1:href="#m5762df3759" x="64.8" y="189.147358" style="stroke: #000000; stroke-width: 0.8" />
+       <ns0:use ns1:href="#mcc1f496dc1" x="64.8" y="189.147358" style="stroke: #000000; stroke-width: 0.8" />
       </ns0:g>
      </ns0:g>
      <ns0:g id="text_4">
@@ -819,7 +819,7 @@
     <ns0:g id="ytick_5">
      <ns0:g id="line2d_5">
       <ns0:g>
-       <ns0:use ns1:href="#m5762df3759" x="64.8" y="131.69658" style="stroke: #000000; stroke-width: 0.8" />
+       <ns0:use ns1:href="#mcc1f496dc1" x="64.8" y="131.69658" style="stroke: #000000; stroke-width: 0.8" />
       </ns0:g>
      </ns0:g>
      <ns0:g id="text_5">
@@ -836,7 +836,7 @@
     <ns0:g id="ytick_6">
      <ns0:g id="line2d_6">
       <ns0:g>
-       <ns0:use ns1:href="#m5762df3759" x="64.8" y="74.245803" style="stroke: #000000; stroke-width: 0.8" />
+       <ns0:use ns1:href="#mcc1f496dc1" x="64.8" y="74.245803" style="stroke: #000000; stroke-width: 0.8" />
       </ns0:g>
      </ns0:g>
      <ns0:g id="text_6">
