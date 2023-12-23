@@ -70,7 +70,8 @@ class StatsChartingUtilities(object):
 
         return choice(string_list)
     
-    def population_pyramid(self, sample1_df, year=2019, county_column_name='County_Name',
+    @staticmethod
+    def population_pyramid(sample1_df, year=2019, county_column_name='County_Name',
                            state_column_name='State_Name', show=True, size_inches_tuple=None,
                            male_xticks_list=None, female_xticks_list=None, verbose=False):
         if size_inches_tuple is None:
@@ -241,7 +242,8 @@ class StatsChartingUtilities(object):
         
         return fig
 
-    def save_fig_as_various(self, fig, chart_name, dir_names_list=['pgf', 'png', 'svg'],
+    @staticmethod
+    def save_fig_as_various(fig, chart_name, dir_names_list=['pgf', 'png', 'svg'],
                             size_inches_tuple=None, verbose=False):
         """
         scu.save_fig_as_various(fig, 'relative_search_strength_of_unprecedented', verbose=True)
@@ -264,7 +266,8 @@ class StatsChartingUtilities(object):
             except Exception as e:
                 print(f'{dir_name} got a {e.__class__} error: {str(e).strip()}')
     
-    def make_a_movie(self, movie_prefix, file_names_list, max_width=None, verbose=True):
+    @staticmethod
+    def make_a_movie(movie_prefix, file_names_list, max_width=None, verbose=True):
         
         # Get the maximum width of the images
         png_dir = path.join(nu.saves_folder, 'png')
@@ -313,7 +316,8 @@ class StatsChartingUtilities(object):
             print(f'Saving movie to {path.abspath(gif_file_path)}')
         imageio.mimsave(gif_file_path, images_list, **kwargs)
 
-    def ball_and_chain(self, ax, index, values, c):
+    @staticmethod
+    def ball_and_chain(ax, index, values, c):
         """
         colormap = scu.r()
         cmap = mpl.cm.get_cmap(colormap)
@@ -323,7 +327,8 @@ class StatsChartingUtilities(object):
         ax.plot(index, values, c='k', zorder=1, alpha=.25)
         ax.scatter(index, values, s=30, lw=.5, c=c, edgecolors='k', zorder=2)
     
-    def get_fontsize(self, rect_width, label_length):
+    @staticmethod
+    def get_fontsize(rect_width, label_length):
         """Get the widest text size that will fit in the rectangle width,
         given the count of characters in the label.
 
@@ -344,7 +349,8 @@ class StatsChartingUtilities(object):
         
         return 14.888684492506771 * (rect_width / label_length)
     
-    def get_text_rgba(self, backround_rgba):
+    @staticmethod
+    def get_text_rgba(backround_rgba):
         """Get the color most contrasting with the background.
 
         Parameters
