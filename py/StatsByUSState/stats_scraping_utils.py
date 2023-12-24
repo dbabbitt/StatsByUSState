@@ -1026,14 +1026,6 @@ class StatsScrapingUtilities(object):
     
     
     @staticmethod
-    def get_similarity_measure(a, b):
-        from difflib import SequenceMatcher
-        
-        return SequenceMatcher(None, str(a), str(b)).ratio()
-    
-    
-    
-    @staticmethod
     def get_max_rsquared_adj(df, columns_list, verbose=False):
         if verbose:
             t0 = time.time()
