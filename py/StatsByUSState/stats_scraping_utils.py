@@ -1077,50 +1077,6 @@ class StatsScrapingUtilities(object):
             print(t1-t0, time.ctime(t1))
 
         return column_similarities_df
-    
-    
-    
-    def driver_get_url(self, driver, url_str, verbose=True):
-        if verbose: print('Getting URL: {}'.format(url_str))
-        finished = 0
-        fails = 0
-        while (finished == 0) and (fails < 8):
-            
-            # Message: Timeout loading page after 100000ms
-            try:
-                driver.set_page_load_timeout(300)
-                driver.get(url_str)
-                finished = 1
-            
-            # Wait for 10 seconds
-            except Exception as e:
-                message = str(e).strip()
-                if verbose: print(message)
-                fails += 1
-                self.wait_for(10, verbose=verbose)
-    
-    
-    
-    def prepare_for_choroplething(self, countries_df, countries_target_column_name,
-                                  us_states_df, st_col_name, st_col_explanation,
-                                  equivalence_column_name, verbose=False):
-        
-        # Create the equivalence dictionaries
-        s2c_dict, c2s_dict = self.get_country_state_equivalents(
-            countries_df, 'country_name', countries_target_column_name,
-            us_states_df, 'state_name', st_col_name,
-            cn_col_explanation=None, st_col_explanation=st_col_explanation,
-            countries_set=None, states_set=None, verbose=verbose)
-        
-        # Add the country equivalence column to the US stats dataframe
-        self.us_stats_df[equivalence_column_name] = self.us_stats_df.index.map(lambda x: s2c_dict.get(x, x))
-        
-        # Add the numeric column to the US stats dataframe
-        states_dict = us_states_df.set_index('state_name')[st_col_name].to_dict()
-        states_min = us_states_df[st_col_name].min()
-        self.us_stats_df[st_col_name] = self.us_stats_df.index.map(lambda x: states_dict.get(x, states_min))
-        cu.column_description_dict[st_col_name] = st_col_explanation
-        nu.store_objects(us_stats_df=self.us_stats_df, column_description_dict=cu.column_description_dict)
 
     
     
@@ -1179,6 +1135,50 @@ class StatsScrapingUtilities(object):
              )
 
         return df
+    
+    
+    
+    def driver_get_url(self, driver, url_str, verbose=True):
+        if verbose: print('Getting URL: {}'.format(url_str))
+        finished = 0
+        fails = 0
+        while (finished == 0) and (fails < 8):
+            
+            # Message: Timeout loading page after 100000ms
+            try:
+                driver.set_page_load_timeout(300)
+                driver.get(url_str)
+                finished = 1
+            
+            # Wait for 10 seconds
+            except Exception as e:
+                message = str(e).strip()
+                if verbose: print(message)
+                fails += 1
+                self.wait_for(10, verbose=verbose)
+    
+    
+    
+    def prepare_for_choroplething(self, countries_df, countries_target_column_name,
+                                  us_states_df, st_col_name, st_col_explanation,
+                                  equivalence_column_name, verbose=False):
+        
+        # Create the equivalence dictionaries
+        s2c_dict, c2s_dict = self.get_country_state_equivalents(
+            countries_df, 'country_name', countries_target_column_name,
+            us_states_df, 'state_name', st_col_name,
+            cn_col_explanation=None, st_col_explanation=st_col_explanation,
+            countries_set=None, states_set=None, verbose=verbose)
+        
+        # Add the country equivalence column to the US stats dataframe
+        self.us_stats_df[equivalence_column_name] = self.us_stats_df.index.map(lambda x: s2c_dict.get(x, x))
+        
+        # Add the numeric column to the US stats dataframe
+        states_dict = us_states_df.set_index('state_name')[st_col_name].to_dict()
+        states_min = us_states_df[st_col_name].min()
+        self.us_stats_df[st_col_name] = self.us_stats_df.index.map(lambda x: states_dict.get(x, states_min))
+        cu.column_description_dict[st_col_name] = st_col_explanation
+        nu.store_objects(us_stats_df=self.us_stats_df, column_description_dict=cu.column_description_dict)
     
     
     
