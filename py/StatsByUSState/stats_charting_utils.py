@@ -220,7 +220,7 @@ class StatsChartingUtilities(object):
         fig.patch.set_facecolor('xkcd:light grey')
         plt.figtext(.5, .925, plot_title, fontsize=15, ha='center')
 
-        # Define male and female bars: "xkcd:baby pink" instead of "lightpink", "xkcd:baby blue" instead of "royalblue"
+        # Define male and female bars
         male_ax.barh(y, df.Male, align='center', color='xkcd:baby blue')
         male_ax.set(title='Males')
         female_ax.barh(y, df.Female, align='center', color='xkcd:baby pink')

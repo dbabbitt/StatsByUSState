@@ -12,6 +12,7 @@ from os import listdir as listdir, makedirs as makedirs, path as osp
 from pandas import DataFrame, Series, concat, read_csv, read_html
 from typing import List, Optional
 import humanize
+import math
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -20,14 +21,13 @@ import re
 import subprocess
 import sys
 import urllib
+import warnings
 try: import dill as pickle
 except:
     try: import pickle5 as pickle
     except: import pickle
 
-import warnings
 warnings.filterwarnings('ignore')
-
 class NotebookUtilities(object):
     """
     This class implements the core of the utility
@@ -81,6 +81,14 @@ class NotebookUtilities(object):
         self.db_folder = osp.join(self.data_folder, 'db'); makedirs(self.db_folder, exist_ok=True)
         self.graphs_folder = osp.join(self.saves_folder, 'graphs'); makedirs(self.graphs_folder, exist_ok=True)
         self.indices_folder = osp.join(self.saves_folder, 'indices'); makedirs(self.indices_folder, exist_ok=True)
+        
+        # Various model paths
+        self.lora_path = osp.abspath(osp.join(self.bin_folder, 'gpt4all-lora-quantized.bin'))
+        self.gpt4all_model_path = osp.abspath(osp.join(self.bin_folder, 'gpt4all-lora-q-converted.bin'))
+        self.ggjt_model_path = osp.abspath(osp.join(
+            self.cache_folder, 'models--LLukas22--gpt4all-lora-quantized-ggjt', 'snapshots', '2e7367a8557085b8267e1f3b27c209e272b8fe6c',
+            'ggjt-model.bin'
+        ))
         
         # Ensure the Scripts folder is in PATH
         self.anaconda_folder = osp.dirname(sys.executable)
@@ -467,10 +475,12 @@ class NotebookUtilities(object):
             row_dict = {}
             row_dict['first_item'] = first_item
             row_dict['second_item'] = max_item
-            row_dict['first_bytes'] = '-'.join(str(x) for x in bytearray(str(first_item),
-                                                                         encoding=self.encoding_type, errors='replace'))
-            row_dict['second_bytes'] = '-'.join(str(x) for x in bytearray(str(max_item),
-                                                                          encoding=self.encoding_type, errors='replace'))
+            row_dict['first_bytes'] = '-'.join(str(x) for x in bytearray(
+                str(first_item), encoding=self.encoding_type, errors='replace'
+            ))
+            row_dict['second_bytes'] = '-'.join(str(x) for x in bytearray(
+                str(max_item), encoding=self.encoding_type, errors='replace'
+            ))
             row_dict['max_similarity'] = max_similarity
 
             rows_list.append(row_dict)
@@ -1458,8 +1468,8 @@ class NotebookUtilities(object):
     @staticmethod
     def get_style_column(tag_obj, verbose=False):
         """
-        Extracts the style column from a given BeautifulSoup tag object and returns
-        the style column tag object.
+        Extracts the style column from a given Wikipedia infobox BeautifulSoup'd
+        tag object and returns the style column tag object.
     
         Parameters:
             tag_obj (bs4.element.Tag): The BeautifulSoup tag object to extract the style column from.
@@ -2086,6 +2096,83 @@ class NotebookUtilities(object):
         display(df)
     
     
+    ### LLM Functions ###
+    
+    
+    def download_lora_model(self, verbose=False):
+        """
+        Download the LoRA model file from a specified URL and save it to the local file system.
+        
+        Parameters:
+            verbose (bool, optional): Whether to print debug information. Defaults to False.
+        
+        Returns:
+            None
+        """
+        
+        # Check if the local file already exists
+        if not osp.exists(self.lora_path):
+            
+            # Construct the download URL
+            download_url = f'https://the-eye.eu/public/AI/models/downloadnomic-ai/gpt4all/{osp.basename(self.lora_path)}'
+            
+            # Download the model file from the URL
+            import requests
+            response = requests.get(download_url)
+            
+            # Create the necessary directories if they don't exist
+            makedirs(osp.dirname(self.lora_path), exist_ok=True)
+            
+            # Save the downloaded model file to disk
+            with open(self.lora_path, 'wb') as f: f.write(response.content)
+            
+            # Print a message if verbose mode is enabled
+            if verbose: print(f'LoRA model downloaded and saved to: {self.lora_path}')
+        
+        # Print a message if verbose mode is enabled and the file already exists
+        elif verbose: print(f'LoRA model already exists at: {self.lora_path}. Skipping download.')
+    
+    
+    def convert_lora_model_to_gpt4all(self, verbose=False):
+        """
+        Converts a LoRA model to a GPT-4all model.
+        
+        Parameters:
+            verbose (bool, optional): Whether to print debug output. Defaults to False.
+        
+        Raises:
+            OSError: If the GPT-4all model path does not exist.
+            subprocess.CalledProcessError: If the conversion process fails.
+        """
+        
+        # Check if the GPT-4-All model path exists
+        if not osp.exists(self.gpt4all_model_path):
+            
+            # Check if the LoRA model path exists
+            if not osp.exists(self.lora_path): raise FileNotFoundError(f"LoRA model path '{self.lora_path}' does not exist.")
+            
+            # Check if the PyLLamaC++ converter executable exists
+            converter_path = osp.abspath(osp.join(self.scripts_folder, 'pyllamacpp-convert-gpt4all.exe'))
+            if not osp.exists(converter_path): raise FileNotFoundError(f"PyLLamaC++ converter executable '{converter_path}' does not exist.")
+            
+            # Check if the tokenizer model file exists
+            llama_file = osp.abspath(osp.join(llama_folder, 'tokenizer.model'))
+            if not osp.exists(llama_file): raise FileNotFoundError(f"Llama tokenizer model file '{llama_file}' does not exist.")
+            
+            # Construct the conversion command
+            command_str = f'{converter_path} {self.lora_path} {llama_file} {self.gpt4all_model_path}'
+            
+            # Print verbose output if requested
+            if verbose: print(command_str, flush=True)
+            
+            # Execute the conversion process
+            output_str = subprocess.check_output(command_str.split(' '))
+            
+            # Print verbose conversion output if requested
+            if verbose:
+                for line_str in output_str.splitlines(): print(line_str.decode(), flush=True)
+    
+    
     ### 3D Point Functions ###
     
     
@@ -2128,7 +2215,6 @@ class NotebookUtilities(object):
             float: The Euclidean distance between the two points.
         """
         x1, x2, y1, y2, z1, z2 = self.get_coordinates(second_point, first_point=first_point)
-        import math
         euclidean_distance = math.sqrt((x1 - x2)**2 + (y1 - y2)**2 + (z1 - z2)**2)
     
         return euclidean_distance

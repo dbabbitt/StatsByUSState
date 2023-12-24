@@ -298,6 +298,8 @@ class ChoroplethUtilities(object):
         self.nonword_regex = re.compile(r'\W+')
         self.light_grey_hex_str = '#e0e0e0'
         self.ocean_blue_hex_str = '#c8eafb'
+        
+        # US States information
         self.us_states_list = [
             'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
             'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia',

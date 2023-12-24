@@ -10,7 +10,7 @@
 """
 StatsScrapingUtilities: A set of utility functions common to stats scraping
 """
-from . import nu
+from . import nu, cu
 import os
 import pandas as pd
 import urllib
@@ -787,8 +787,6 @@ class StatsScrapingUtilities(object):
             'Zambia': 'ZMB',
             'Zimbabwe': 'ZWE'
         }
-        
-        # US States information
         if nu.pickle_exists('us_stats_df'): self.us_stats_df = nu.load_object('us_stats_df')
         if nu.pickle_exists('column_description_dict'):
             self.column_description_dict = nu.load_object('column_description_dict')
@@ -811,6 +809,77 @@ class StatsScrapingUtilities(object):
             'Wisconsin': 'WI', 'Wyoming': 'WY', 'American Samoa': 'AS',
             'Guam': 'GU', 'Northern Mariana Islands': 'MP',
             'Puerto Rico': 'PR', 'Virgin Islands': 'VI'
+        }
+        self.disease_name_dict = {
+            '1918 (Spanish) flu': '1918 Flu',
+            'AIDS/HIV infection': 'HIV',
+            'Andes hantavirus': 'Hantavirus',
+            'Anthrax, cutaneous': 'Cutaneous Anthrax',
+            'Anthrax, gastrointestinal, intestinal type': 'Intestinal Anthrax',
+            'Anthrax, gastrointestinal, oropharyngeal type': 'Oropharyngeal Anthrax',
+            'Anthrax, specifically the pulmonary form': 'Pulmonary Anthrax',
+            'Asian (1956–58) flu': '1956 Flu',
+            'Aspergillosis, invasive pulmonary form': 'Aspergillosis',
+            'Bubonic plague': 'Bubonic Plague',
+            'COVID-19 (Alpha variant)': 'COVID-19 Alpha',
+            'COVID-19 (Delta variant)': 'COVID-19 Delta',
+            'COVID-19 (Omicron variant)': 'COVID-19 Omicron',
+            'COVID-19 (ancestral strain)': 'COVID-19',
+            'Chickenpox (varicella)': 'Varicella',
+            'Cholera, in Africa': 'Cholera',
+            'Common cold (e.g., rhinovirus)': 'Rhinovirus',
+            'Coronavirus disease 2019 (COVID-19)': 'COVID-19',
+            'Cryptococcal meningitis': 'Meningitis',
+            'Dengue haemorrhagic fever (DHF)': 'DHF',
+            'Diphtheria, respiratory': 'Respiratory Diphtheria',
+            'Eastern equine encephalitis virus': 'EEE',
+            'Ebola (2014 outbreak)': '2014 Ebola',
+            'Ebola virus disease – specifically EBOV': 'EBOV',
+            'Glanders, septicemic': 'Glanders',
+            'Granulomatous amoebic encephalitis': 'GAE',
+            'HIV/AIDS': 'HIV',
+            'Hand, foot and mouth disease, children < 5 years old': 'HFMD',
+            'Hantavirus infection': 'Hantavirus',
+            'Hantavirus pulmonary syndrome (HPS)': 'HPS',
+            'Hepatitis A, adults > 50 years old': 'Hepatitis A',
+            'Hong Kong (1968–69) flu': '1968 Flu',
+            'Influenza (1918 pandemic strain)': '1918 Flu',
+            'Influenza (2009 pandemic strain)': '2009 Flu',
+            'Influenza (seasonal strains)': 'Seasonal Flu',
+            'Influenza A virus subtype H5N1': 'H5N1 Flu',
+            'Influenza A, typical pandemics': 'Influenza A',
+            'Intestinal capillariasis': 'Capillariasis',
+            'Lassa fever': 'Lassa',
+            'Macanine alphaherpesvirus 1': 'Alphaherpesvirus',
+            'Marburg virus disease – all outbreaks combined': 'Marburg',
+            'Measles (rubeola), in developing countries': 'Rubeola',
+            'Meningococcal disease': 'Meningitis',
+            'Middle Eastern Respiratory Syndrome (MERS)': 'MERS',
+            'Mucormycosis (Black fungus)': 'Mucormycosis',
+            'Mumps encephalitis': 'ME',
+            'Nipah virus': 'Nipah',
+            'Pertussis (whooping cough), children in developing countries': 'Pertussis',
+            'Pertussis (whooping cough), infants in developing countries': 'Pertussis',
+            'Plague, pneumonic': 'Pneumonic Plague',
+            'Plague, septicemic': 'Septicemic Plague',
+            'Primary amoebic meningoencephalitis': 'Meningoencephalitis',
+            'Seasonal Influenza, Worldwide': 'Seasonal Flu',
+            'Severe acute respiratory syndrome (SARS)': 'SARS',
+            'Smallpox Variola major – specifically the malignant (flat) or hemorrhagic type': 'Variola Major',
+            'Smallpox, Variola major': 'Variola Major',
+            'Smallpox, Variola major – in pregnant women': 'Variola Major',
+            'Smallpox, Variola minor': 'Variola Minor',
+            'Tetanus, Generalized': 'Tetanus',
+            'Transmissible spongiform encephalopathies': 'Encephalopathies',
+            'Tuberculosis, HIV Negative': 'Tuberculosis',
+            'Tularemia, pneumonic': 'Pneumonic Tularemia',
+            'Tularemia, typhoidal': 'Typhoidal Tularemia',
+            'Typhoid fever': 'Typhoid',
+            'Varicella (chickenpox), adults': 'Varicella',
+            'Varicella (chickenpox), children': 'Varicella',
+            'Varicella (chickenpox), in newborns': 'Varicella',
+            'Venezuelan Equine Encephalitis (VEE)': 'VEE',
+            'Visceral leishmaniasis': 'Leishmaniasis',
         }
     
     
@@ -872,27 +941,6 @@ class StatsScrapingUtilities(object):
     
     
     
-    def driver_get_url(self, driver, url_str, verbose=True):
-        if verbose: print('Getting URL: {}'.format(url_str))
-        finished = 0
-        fails = 0
-        while (finished == 0) and (fails < 8):
-            
-            # Message: Timeout loading page after 100000ms
-            try:
-                driver.set_page_load_timeout(300)
-                driver.get(url_str)
-                finished = 1
-            
-            # Wait for 10 seconds
-            except Exception as e:
-                message = str(e).strip()
-                if verbose: print(message)
-                fails += 1
-                self.wait_for(10, verbose=verbose)
-    
-    
-    
     @staticmethod
     def get_country_state_equivalents(
         countries_df, country_name_column, country_value_column,
@@ -930,8 +978,9 @@ class StatsScrapingUtilities(object):
             if cn_col_explanation is None: cn_col_explanation = country_value_column.replace('_', ' ')
             print()
             explanations_list = []
-            # print(state_tuples_list)
-            # print(country_tuples_list)
+            if verbose:
+                print(state_tuples_list)
+                print(country_tuples_list)
         for country_tuple in country_tuples_list:
             candidate_tuple = sorted([s for s in state_tuples_list], key=lambda x: abs(x[1] - country_tuple[1]))[0]
             state_name = candidate_tuple[0]
@@ -984,29 +1033,6 @@ class StatsScrapingUtilities(object):
     
     
     
-    def prepare_for_choroplething(self, countries_df, countries_target_column_name,
-                                  us_states_df, st_col_name, st_col_explanation,
-                                  equivalence_column_name, verbose=False):
-        
-        # Create the equivalence dictionaries
-        s2c_dict, c2s_dict = self.get_country_state_equivalents(
-            countries_df, 'country_name', countries_target_column_name,
-            us_states_df, 'state_name', st_col_name,
-            cn_col_explanation=None, st_col_explanation=st_col_explanation,
-            countries_set=None, states_set=None, verbose=verbose)
-        
-        # Add the country equivalence column to the US stats dataframe
-        self.us_stats_df[equivalence_column_name] = self.us_stats_df.index.map(lambda x: s2c_dict.get(x, x))
-        
-        # Add the numeric column to the US stats dataframe
-        states_dict = us_states_df.set_index('state_name')[st_col_name].to_dict()
-        states_min = us_states_df[st_col_name].min()
-        self.us_stats_df[st_col_name] = self.us_stats_df.index.map(lambda x: states_dict.get(x, states_min))
-        self.column_description_dict[st_col_name] = st_col_explanation
-        nu.store_objects(us_stats_df=self.us_stats_df, column_description_dict=self.column_description_dict)
-    
-    
-    
     @staticmethod
     def get_max_rsquared_adj(df, columns_list, verbose=False):
         if verbose:
@@ -1051,3 +1077,125 @@ class StatsScrapingUtilities(object):
             print(t1-t0, time.ctime(t1))
 
         return column_similarities_df
+    
+    
+    
+    def driver_get_url(self, driver, url_str, verbose=True):
+        if verbose: print('Getting URL: {}'.format(url_str))
+        finished = 0
+        fails = 0
+        while (finished == 0) and (fails < 8):
+            
+            # Message: Timeout loading page after 100000ms
+            try:
+                driver.set_page_load_timeout(300)
+                driver.get(url_str)
+                finished = 1
+            
+            # Wait for 10 seconds
+            except Exception as e:
+                message = str(e).strip()
+                if verbose: print(message)
+                fails += 1
+                self.wait_for(10, verbose=verbose)
+    
+    
+    
+    def prepare_for_choroplething(self, countries_df, countries_target_column_name,
+                                  us_states_df, st_col_name, st_col_explanation,
+                                  equivalence_column_name, verbose=False):
+        
+        # Create the equivalence dictionaries
+        s2c_dict, c2s_dict = self.get_country_state_equivalents(
+            countries_df, 'country_name', countries_target_column_name,
+            us_states_df, 'state_name', st_col_name,
+            cn_col_explanation=None, st_col_explanation=st_col_explanation,
+            countries_set=None, states_set=None, verbose=verbose)
+        
+        # Add the country equivalence column to the US stats dataframe
+        self.us_stats_df[equivalence_column_name] = self.us_stats_df.index.map(lambda x: s2c_dict.get(x, x))
+        
+        # Add the numeric column to the US stats dataframe
+        states_dict = us_states_df.set_index('state_name')[st_col_name].to_dict()
+        states_min = us_states_df[st_col_name].min()
+        self.us_stats_df[st_col_name] = self.us_stats_df.index.map(lambda x: states_dict.get(x, states_min))
+        cu.column_description_dict[st_col_name] = st_col_explanation
+        nu.store_objects(us_stats_df=self.us_stats_df, column_description_dict=cu.column_description_dict)
+
+    
+    
+    
+    @staticmethod
+    def load_timeseries(
+        name, is_global=True, base_url=None, nondate_columns_list=None, dropped_columns_list=None
+    ):
+        import requests
+        if is_global: global_local = 'global'
+        else: global_local = 'US'
+        if (base_url is None): base_url = 'https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series'
+        url = f'{base_url}/time_series_covid19_{name}_{global_local}.csv'
+        
+        if (nondate_columns_list is None): nondate_columns_list = ['UID', 'iso2', 'iso3', 'code3', 'FIPS', 'Admin2', 'Province_State', 'Country_Region', 'Lat', 'Long_', 'Combined_Key', 'Population']
+        if name == 'confirmed': columns_list = nondate_columns_list[:-1]
+        elif is_global: columns_list = ['Country/Region', 'Province/State', 'Lat', 'Long']
+        else: columns_list = nondate_columns_list
+        df = pd.read_csv(url, index_col=columns_list)
+        df['type'] = name.lower()
+        df.columns.name = 'date'
+        
+        if (dropped_columns_list is None): dropped_columns_list = ['UID', 'iso2', 'iso3', 'code3', 'FIPS', 'Admin2', 'Lat', 'Long_', 'Combined_Key', 'Population']
+        if name == 'confirmed': columns_list = dropped_columns_list[:-1]
+        elif is_global: columns_list = ['Lat', 'Long']
+        else: columns_list = dropped_columns_list
+        df = (df
+                .set_index('type', append=True)
+                .reset_index(columns_list, drop=True)
+                .stack()
+                .reset_index()
+                .set_index('date')
+             )
+        df.index = pd.to_datetime(df.index)
+        if is_global: df.columns = ['country', 'state', 'type', 'cases']
+        else: df.columns = ['state', 'country', 'type', 'cases']
+
+        if is_global:
+
+            # Fix South Korea
+            df.loc[df.country =='Korea, South', 'country'] = 'South Korea'
+
+            # Move HK to country level
+            df.loc[df.state =='Hong Kong', 'country'] = 'Hong Kong'
+            df.loc[df.state =='Hong Kong', 'state'] = np.nan
+
+        # Aggregate large countries split by states
+        if is_global: global_local = 'country'
+        else: global_local = 'state'
+        df = (df
+             .groupby(['date', global_local, 'type'])
+             .sum()
+             .reset_index()
+             .sort_values([global_local, 'date'])
+             .set_index('date')
+             )
+
+        return df
+    
+    
+    
+    def get_countries_with_min_threshold_for_data_frame(self, df_cases, is_global=True, by='cases', min_threshold=10):
+        countries = df_cases[df_cases[by].ge(min_threshold)].sort_values(by=by, ascending=False)
+        if is_global: global_local = 'country'
+        else: global_local = 'state'
+        countries = countries[global_local].values
+        
+        return countries
+    
+    
+    
+    def get_countries_with_min_threshold(self, df_cases, is_global=True, by='cases', min_threshold=10):
+        countries = df_cases[df_cases[by].ge(min_threshold)].sort_values(by=by, ascending=False)
+        if is_global: global_local = 'country'
+        else: global_local = 'state'
+        countries = countries[global_local].unique()
+        
+        return countries
