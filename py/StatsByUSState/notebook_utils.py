@@ -38,12 +38,7 @@ class NotebookUtilities(object):
         import sys
         import os.path as osp
         sys.path.insert(1, osp.abspath('../py'))
-        from notebook_utils import NotebookUtilities
-        
-        nu = NotebookUtilities(
-            data_folder_path=osp.abspath('../data'),
-            saves_folder_path=osp.abspath('../saves')
-        )
+        from StatsByUSState import nu
     """
     
     def __init__(self, data_folder_path=None, saves_folder_path=None, verbose=False):
@@ -768,7 +763,10 @@ class NotebookUtilities(object):
     
     
     @staticmethod
-    def open_path_in_notepad(path_str, home_key='USERPROFILE', text_editor_path=r'C:\Program Files\Notepad++\notepad++.exe', verbose=True):
+    def open_path_in_notepad(
+        path_str, home_key='USERPROFILE', text_editor_path=r'C:\Program Files\Notepad++\notepad++.exe',
+        continue_execution=True, verbose=True
+    ):
         """
         Open a file in Notepad or a specified text editor.
         
@@ -776,6 +774,8 @@ class NotebookUtilities(object):
             path_str (str): The path to the file to be opened.
             home_key (str, optional): The environment variable key for the home directory. Default is 'USERPROFILE'.
             text_editor_path (str, optional): The path to the text editor executable. Default is Notepad++.
+            continue_execution (bool, optional): If False, interacts with the subprocess and attempts to open the
+                parent folder in explorer if it gets a bad return code. Default is True.
             verbose (bool, optional): If True, prints debug output. Default is False.
         
         Returns:
@@ -800,10 +800,14 @@ class NotebookUtilities(object):
 
         # Open the absolute path to the file in Notepad or the specified text editor
         # !"{text_editor_path}" "{absolute_path}"
-        import subprocess
-        try: subprocess.run([text_editor_path, absolute_path])
-        except FileNotFoundError as e: subprocess.run(['explorer.exe', osp.dirname(absolute_path)])
-
+        cmd = [text_editor_path, absolute_path]
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if not continue_execution:
+            out, err = proc.communicate()
+            if (proc.returncode != 0):
+                if verbose: print('Open attempt failed: ' + err.decode('utf8'))
+                subprocess.run(['explorer.exe', osp.dirname(absolute_path)])
+    
     
     @staticmethod
     def get_top_level_folder_paths(folder_path, verbose=False):
@@ -952,8 +956,8 @@ class NotebookUtilities(object):
         
         # Return the list of DataFrame pickle file names
         return dfs_list
-    
-    
+            
+
     def show_dupl_fn_defs_search_string(self, util_path=None, github_folder=None):
         """
         Identifies and reports duplicate function definitions in Jupyter notebooks and suggests how to consolidate them.
@@ -1062,7 +1066,7 @@ class NotebookUtilities(object):
             os.remove(pickle_path)
             if verbose: print(e, ": Couldn't save {:,} cells as a pickle.".format(df.shape[0]*df.shape[1]), flush=True)
             if raise_exception: raise
-
+    
     
     def csv_exists(self, csv_name, folder_path=None, verbose=False):
         """
@@ -1612,14 +1616,7 @@ class NotebookUtilities(object):
             # Import necessary libraries and modules
             import sys
             sys.path.insert(1, '../py')  # Add the '../py' directory to the system path
-            from notebook_utils import NotebookUtilities
-            import os.path as osp
-            
-            # Create a NotebookUtilities instance with a specified data folder path
-            nu = NotebookUtilities(
-                data_folder_path=osp.abspath('../data'),
-                saves_folder_path=osp.abspath('../saves')
-            )
+            from StatsByUSState import nu
             
             # Example usage of the function
             tables_url = 'https://en.wikipedia.org/wiki/Provinces_of_Afghanistan'
@@ -1868,14 +1865,14 @@ class NotebookUtilities(object):
     
     
     @staticmethod
-    def modalize_columns(df, columns_list, new_column):
+    def modalize_columns(df, columns_list, new_column_name):
         """
         Create a new column in a DataFrame representing the modal value of specified columns.
         
         Parameters:
             df (pandas.DataFrame): The input DataFrame.
             columns_list (list): The list of column names from which to calculate the modal value.
-            new_column (str): The name of the new column to create.
+            new_column_name (str): The name of the new column to create.
         
         Returns:
             pandas.DataFrame: The modified DataFrame with the new column representing the modal value.
@@ -1884,17 +1881,17 @@ class NotebookUtilities(object):
         # Ensure that all columns are in the data frame
         columns_list = list(set(df.columns).intersection(set(columns_list)))
         
-        # Create a mask series indicating rows with unique values across the specified columns
+        # Create a mask series indicating rows with one unique value across the specified columns
         mask_series = (df[columns_list].apply(Series.nunique, axis='columns') == 1)
         
         # Replace non-unique or missing values with NaN
-        df.loc[~mask_series, new_column] = np.nan
+        df.loc[~mask_series, new_column_name] = np.nan
         
         # Define a function to extract the first valid value in each row
         f = lambda srs: srs[srs.first_valid_index()]
         
         # For rows with identical values in specified columns, set the new column to the modal value
-        df.loc[mask_series, new_column] = df[mask_series][columns_list].apply(f, axis='columns')
+        df.loc[mask_series, new_column_name] = df[mask_series][columns_list].apply(f, axis='columns')
     
         return df
     
@@ -2545,7 +2542,7 @@ class NotebookUtilities(object):
         idx_reference='United States',
         annot_reference='most evil', aspect_ratio=None, least_x_xytext=(40, -10), most_x_xytext=(-150, 55),
         least_y_xytext=(-200, -10),
-        most_y_xytext=(45, 0), reference_xytext=(-75, 25), color_list=None
+        most_y_xytext=(45, 0), reference_xytext=(-75, 25), color_list=None, verbose=False
     ):
         """
         Create a first-order (linear) scatter plot assuming the data frame
@@ -2583,9 +2580,10 @@ class NotebookUtilities(object):
                 the reference point. Default is (-75, 25).
             color_list (list[str], optional): The list of colors to be used for the scatter plot.
                 Default is None, which will use a default color scheme.
+            verbose (bool, optional): Whether to print debug output. Defaults to False.
         
         Returns:
-            figure(matplotlib.figure.Figure): The figure object for the generated scatter plot.
+            tuple: The figure and axis object for the generated scatter plot.
         """
     
         if aspect_ratio is None: aspect_ratio = self.facebook_aspect_ratio
@@ -2608,40 +2606,54 @@ class NotebookUtilities(object):
         if not ylabel_str.endswith(' (response variable)'): ylabel_str = f'{ylabel_str} (response variable)'
         ylabel_text = plt.ylabel(ylabel_str)
     
-        kwargs = dict(textcoords='offset points', ha='left', va='bottom',
-                      bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.5),
-                      arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0'))
+        kwargs = dict(
+            textcoords='offset points', ha='left', va='bottom',
+            bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.5),
+            arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0')
+        )
         
         xdata = df[xname].values
         least_x = xdata.min()
+        if verbose: print(f'least_x = {least_x}')
         most_x = xdata.max()
+        if verbose: print(f'most_x = {most_x}')
         
         ydata = df[yname].values
         most_y = ydata.max()
+        if verbose: print(f'most_y = {most_y}')
         least_y = ydata.min()
+        if verbose: print(f'least_y = {least_y}')
         
-        least_x_tried = most_x_tried = least_y_tried = most_y_tried = False
-    
+        least_x_tried = False
+        most_x_tried = False
+        least_y_tried = False
+        most_y_tried = False
+        
         for label, x, y in zip(df.index, xdata, ydata):
             if (x == least_x) and not least_x_tried:
-                annotation = plt.annotate('{} (least {})'.format(label, x_adj),
-                                          xy=(x, y), xytext=least_x_xytext, **kwargs)
+                annotation = plt.annotate(
+                    '{} (least {})'.format(label, x_adj), xy=(x, y), xytext=least_x_xytext, **kwargs
+                )
                 least_x_tried = True
             elif (x == most_x) and not most_x_tried:
-                annotation = plt.annotate('{} (most {})'.format(label, x_adj),
-                                          xy=(x, y), xytext=most_x_xytext, **kwargs)
+                annotation = plt.annotate(
+                    '{} (most {})'.format(label, x_adj), xy=(x, y), xytext=most_x_xytext, **kwargs
+                )
                 most_x_tried = True
             elif (y == least_y) and not least_y_tried:
-                annotation = plt.annotate('{} (least {})'.format(label, y_adj),
-                                          xy=(x, y), xytext=least_y_xytext, **kwargs)
+                annotation = plt.annotate(
+                    '{} (least {})'.format(label, y_adj), xy=(x, y), xytext=least_y_xytext, **kwargs
+                )
                 least_y_tried = True
             elif (y == most_y) and not most_y_tried:
-                annotation = plt.annotate('{} (most {})'.format(label, y_adj),
-                                          xy=(x, y), xytext=most_y_xytext, **kwargs)
+                annotation = plt.annotate(
+                    '{} (most {})'.format(label, y_adj), xy=(x, y), xytext=most_y_xytext, **kwargs
+                )
                 most_y_tried = True
             elif (label == idx_reference):
-                annotation = plt.annotate('{} ({})'.format(label, annot_reference),
-                                          xy=(x, y), xytext=reference_xytext, **kwargs)
+                annotation = plt.annotate(
+                    '{} ({})'.format(label, annot_reference), xy=(x, y), xytext=reference_xytext, **kwargs
+                )
     
         title_obj = fig.suptitle(t=title, x=0.5, y=0.91)
         
@@ -2660,7 +2672,7 @@ class NotebookUtilities(object):
         s_str = r'$r^2=' + coefficient_of_determination_statement + ',\ p' + pvalue_statement + '$'
         text_tuple = ax.text(0.75, 0.9, s_str, alpha=0.5, transform=ax.transAxes, fontsize='x-large')
         
-        return fig
+        return fig, ax
     
     
     def plot_inauguration_age(

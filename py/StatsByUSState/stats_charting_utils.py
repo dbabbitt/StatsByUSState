@@ -264,7 +264,7 @@ class StatsChartingUtilities(object):
                 fig.set_size_inches(size_inches_tuple[0], size_inches_tuple[1])
                 fig.savefig(file_path, dpi=100)#, bbox_inches='tight'
             except Exception as e:
-                print(f'{dir_name} got a {e.__class__} error: {str(e).strip()}')
+                print(f'{dir_name} got a {e.__class__.__name__} error: {str(e).strip()}')
     
     @staticmethod
     def make_a_movie(movie_prefix, file_names_list, max_width=None, verbose=True):
@@ -329,25 +329,23 @@ class StatsChartingUtilities(object):
     
     @staticmethod
     def get_fontsize(rect_width, label_length):
-        """Get the widest text size that will fit in the rectangle width,
+        """
+        Get the widest text size that will fit in the rectangle width,
         given the count of characters in the label.
 
-        Parameters
-        ----------
-        rect_width : float
-            width in pixels of the rectangle
-        label_length : int
-            count of characters in the label.
-
-        Returns
-        -------
-        float
-            font size
-        """
-        # Based on Wyoming:
-        # f(4.701557080830737, 7) = 10.0
+        Parameters:
+            rect_width (float): width in pixels of the rectangle
+            label_length (int): count of characters in the label.
         
-        return 14.888684492506771 * (rect_width / label_length)
+        Returns:
+            float: font size
+        
+        Note:
+            Based on Wyoming: f(4.701557080830737, 7) = 10.0
+        """
+        fontsize = 14.888684492506771 * (rect_width / label_length)
+        
+        return fontsize
     
     @staticmethod
     def get_text_rgba(backround_rgba):
@@ -380,39 +378,34 @@ class StatsChartingUtilities(object):
         
         return text_rgba
     
+    
+    
     def draw_text(self, ax, s, r, c, va, text_kwargs):
-        """Drawing text with Matplotlib.
-
-        Parameters
-        ----------
-        ax
-            Matplotlib Axes instance
-        s : str
-            The text
-        r : dict
-            keyword arguments that describe the rectangle
-        c : tuple
-            RGBA color tuple of floats in the range of zero to one
-        va : str
-            {'center', 'top', 'bottom', 'baseline', 'center_baseline'} passed to matplotlib.Axes.text for vertical alignment
-        text_kwargs : dict
-            keyword arguments passed to matplotlib.Axes.text.
+        """
+        Drawing text with Matplotlib.
+    
+        Parameters:
+            ax: Matplotlib Axes instance
+            s (str): The text
+            r (dict): keyword arguments that describe the rectangle
+            c (tuple): RGBA color tuple of floats in the range of zero to one
+            va (str): {'center', 'top', 'bottom', 'baseline', 'center_baseline'}
+                      passed to matplotlib.Axes.text for vertical alignment
+            text_kwargs (dict): keyword arguments passed to matplotlib.Axes.text.
         """
         
         # Get text position and draw text
         x = r['x'] + (r['dx'] / 2)
         y = r['y'] + (r['dy'] / 2)
         text_obj = ax.text(x=x, y=y, s=s, va=va, ha='center', **text_kwargs)
-
+        
+        # Set text color to the highest contrast between black and white
         if not (('color' in text_kwargs) or ('c' in text_kwargs)):
-
-            # Set text color to the highest contrast between black and white
             text_rgba = self.get_text_rgba(c)
             text_obj.set_color(text_rgba)
-
+        
+        # Set text size to the widest that will fit in the rectangle
         if not (('fontsize' in text_kwargs) or ('size' in text_kwargs)):
-
-            # Set text size to the widest that will fit in the rectangle
             fontsize = self.get_fontsize(r['dx'], len(s))
             text_obj.set_fontsize(fontsize)
     

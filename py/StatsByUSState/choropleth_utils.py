@@ -54,7 +54,6 @@ class ChoroplethUtilities(object):
     afghanistan_provinces_df = nu.load_object('afghanistan_provinces_df')
     cu = ChoroplethUtilities(iso_3166_2_code='af', one_country_df=afghanistan_provinces_df)
     """
-    
     def __init__(self, iso_3166_2_code=None, one_country_df=None, all_countries_df=None, verbose=False):
         if iso_3166_2_code is None: self.iso_3166_2_code = 'us'
         else: self.iso_3166_2_code = iso_3166_2_code.lower()
@@ -501,14 +500,14 @@ class ChoroplethUtilities(object):
                         defs_xml_str += '</defs>'
                         try: defs_xml = et.fromstring(defs_xml_str)
                         except Exception as e:
-                            print(f'{e.__class__} error in defs_xml = et.fromstring(defs_xml_str): {str(e).strip()}')
+                            print(f'{e.__class__.__name__} error in defs_xml = et.fromstring(defs_xml_str): {str(e).strip()}')
                             print()
                             print('defs_xml_str')
                             print(defs_xml_str)
                             raise
                         try: legend_1_xml.insert(0, defs_xml)
                         except Exception as e:
-                            print(f'{e.__class__} error in legend_1_xml.insert(0, defs_xml): {str(e).strip()}')
+                            print(f'{e.__class__.__name__} error in legend_1_xml.insert(0, defs_xml): {str(e).strip()}')
                             print()
                             print('defs_xml_str')
                             print(defs_xml_str)

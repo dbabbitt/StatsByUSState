@@ -884,7 +884,6 @@ class StatsScrapingUtilities(object):
     
     
     
-    
     @staticmethod
     def get_driver(browser_name='FireFox', verbose=True):
         if verbose: print('Getting the {} driver'.format(browser_name))
@@ -1174,7 +1173,8 @@ class StatsScrapingUtilities(object):
     
     
     
-    def get_countries_with_min_threshold_for_data_frame(self, df_cases, is_global=True, by='cases', min_threshold=10):
+    @staticmethod
+    def get_countries_with_min_threshold_for_data_frame(df_cases, is_global=True, by='cases', min_threshold=10):
         countries = df_cases[df_cases[by].ge(min_threshold)].sort_values(by=by, ascending=False)
         if is_global: global_local = 'country'
         else: global_local = 'state'
@@ -1184,7 +1184,8 @@ class StatsScrapingUtilities(object):
     
     
     
-    def get_countries_with_min_threshold(self, df_cases, is_global=True, by='cases', min_threshold=10):
+    @staticmethod
+    def get_countries_with_min_threshold(df_cases, is_global=True, by='cases', min_threshold=10):
         countries = df_cases[df_cases[by].ge(min_threshold)].sort_values(by=by, ascending=False)
         if is_global: global_local = 'country'
         else: global_local = 'state'
