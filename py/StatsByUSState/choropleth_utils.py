@@ -326,15 +326,20 @@ class ChoroplethUtilities(object):
     
     
     @staticmethod
-    def trim_d_path(file_path):
+    def trim_d_path(file_path, verbose=False):
         with open(file_path, 'r', encoding=nu.encoding_type, errors='ignore') as f:
             xml_str = f.read()
             d_regex = re.compile('d="([^"\r\n]+)[\r\n]+')
             while d_regex.search(xml_str):
                 xml_str = d_regex.sub(r'd="\g<1>', xml_str)
+            
+            # Replace the Unicode minus sign (−) with its XML numeric reference (&#8722;)
+            xml_str = xml_str.replace('\u2212', '&#8722;').strip()
+            
+            if verbose: print(f'"{xml_str}"')
             with open(file_path, 'w') as f:
                 print(
-                    xml_str.strip().encode(nu.encoding_type, errors=nu.encoding_error).decode(
+                    xml_str.encode(nu.encoding_type, errors=nu.encoding_error).decode(
                         encoding=nu.decoding_type, errors=nu.decoding_error
                     ), file=f
                 )
@@ -536,12 +541,12 @@ class ChoroplethUtilities(object):
         return legend_xml, colors_dict
     
     
-    def get_colorbar_xml(self, column_name, cmap='viridis', min=None, max=None):
+    def get_colorbar_xml(self, column_name, cmap='viridis', min=None, max=None, verbose=False):
         cb1 = self.show_colorbar(column_name, cmap=cmap, min=min, max=max)
         file_path = osp.join(self.svg_dir, 'colorbar.svg')
         
         # Trim the colorbar xml
-        self.trim_d_path(file_path)
+        self.trim_d_path(file_path, verbose=verbose)
         root = et.parse(file_path).getroot()
         for colorbar_xml in root.iter():
             if (colorbar_xml.tag.split('}')[-1] == 'g'):

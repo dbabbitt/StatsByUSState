@@ -12,6 +12,7 @@ StatsScrapingUtilities: A set of utility functions common to stats scraping
 """
 from . import nu, cu
 import os
+from os import path as osp
 import pandas as pd
 import urllib
 import warnings
@@ -29,7 +30,16 @@ class StatsScrapingUtilities(object):
         ssu = StatsScrapingUtilities()
     """
     
-    def __init__(self, verbose=False):
+    def __init__(self, secrets_json_path=None, verbose=False):
+        
+        # Get secrets json
+        if secrets_json_path is None:
+            self.secrets_json_path = osp.join(nu.data_folder, 'secrets', 'us_secrets.json')
+        else:
+            self.secrets_json_path = secrets_json_path
+        with open(self.secrets_json_path, 'r') as f:
+            import json
+            self.secrets_json = json.load(f)
         
         # Obscuration error and url patterns
         import re
